@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="js admin-bar">
+ <head>
+  <meta charset="utf-8" />
+  <meta name="Generator" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>管理中心</title>
+  <link rel="stylesheet" href="/theme/seven/assets/css/normalize.css">
+  <link rel="stylesheet" href="/theme/seven/assets/css/base.css">
+  <link rel="stylesheet" href="/theme/seven/assets/css/style.css">
+  <link rel="stylesheet" href="/theme/seven/assets/css/admin_bar.css">
+  <script src="/theme/seven/assets/js/jquery.min.js"></script>
+  <script src="/theme/seven/assets/js/main.js"></script>
+  <!--[if lte IE 8]>
+  <script src="http://midi/core/misc/html5.js?v=3.7.2"></script>
+  <![endif]-->
+ </head>
+ <body class="page logged-in has-flexbox">
+  <div class="layout--boxton layout">
+   <header class="l-header" role="banner">
+    <div class="l-header-inner container container-fluid">
+     <div class="tabs">
+      <ul class="tabs primary">
+       <li class="active"><a href="/admin" class="active"><span class="responsive-tabs-link-text-wrapper">首页</span></a></li>
+      </ul>
+     </div>
+    </div>
+   </header>
+   <div class="l-wrapper">
+    <div class="l-wrapper-inner container container-fluid">
+     <div class="l-content" role="main" aria-label="Main content">
+       <table class="layui-table">
+         <tbody>
+             <tr>
+                 <td style="width: 400px;">操作系统</td>
+                 <td>{{ PHP_OS }}</td>
+             </tr>
+             <tr>
+                 <td>运行环境</td>
+                 <td>{{ $_SERVER["SERVER_SOFTWARE"] }}</td>
+             </tr>
+             <tr>
+                 <td>WEB服务端口</td>
+                 <td>{{ $_SERVER['SERVER_PORT'] }}</td>
+             </tr>
+             <tr>
+                 <td>网站文档目录</td>
+                 <td>{{ $_SERVER["DOCUMENT_ROOT"] }}</td>
+             </tr>
+             <tr>
+                 <td>浏览器信息</td>
+                 <td>{{ substr($_SERVER['HTTP_USER_AGENT'], 0, 40) }}</td>
+             </tr>
+             <tr>
+                 <td>上传附件限制</td>
+                 <td>{{ ini_get('upload_max_filesize') }}</td>
+             </tr>
+             <tr>
+                 <td>PHP版本</td>
+                 <td>{{ PHP_VERSION }}</td>
+             </tr>
+             <tr>
+                 <td>服务器域名</td>
+                 <td>{{ $_SERVER['SERVER_NAME'] }}</td>
+             </tr>
+             <tr>
+                 <td>IP地址</td>
+                 <td>{{ $_SERVER['REMOTE_ADDR'] }}</td>
+             </tr>
+         </tbody>
+       </table>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div id="admin-bar" class="admin-bar-site-midi admin-bar-processed" style="">
+   <div id="admin-bar-wrapper">
+    <ul id="admin-bar-icon" class="dropdown expanded">
+     <li class="admin-bar-icon expandable">
+      <a href="/" class="icon active">首页</a>
+      <ul class="dropdown">
+       <li><a href="/admin/reports/status/run-cron">清空缓存</a></li>
+      </ul>
+     </li>
+    </ul>
+    <ul id="admin-bar-menu" class="top-level expanded">
+     <li class="expandable"><span class="menu">Admin bar</span>
+      <ul class="dropdown">
+       <li class="expandable">
+        <a href="/admin/content" class="admin-content">内容管理</a>
+        <ul class="dropdown">
+         <li class="expandable">
+          <a href="/node/add" class="node-add">添加内容</a>
+          <ul class="dropdown">
+           <li><a href="/node/add/page">单页</a></li>
+           <li><a href="/node/add/page">新闻</a></li>
+          </ul>
+         </li>
+        </ul>
+       </li>
+      </ul>
+     </li>
+    </ul>
+   </div>
+  </div>
+ </body>
+</html>
