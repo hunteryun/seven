@@ -1913,6 +1913,7 @@ body .layui-table-tips .layui-layer-content{background: none; padding: 0; box-sh
 .messages .item-list ul {
   margin-bottom: 0;
   margin-left: 0;
+  list-style: none;
 }
 
 .messages a {
@@ -1982,6 +1983,80 @@ div.messages.error:before {
 }
 div.messages.info:before {
   background-image: linear-gradient(transparent, transparent), url(../images/message-info.svg);
+}
+
+/** Form API **/
+.form-item,
+.form-actions {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+tr.odd .form-item,
+tr.even .form-item {
+  margin-top: 0;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+.form-item .description {
+  font-size: 0.85em;
+}
+label {
+  display: block;
+  font-weight: bold;
+}
+label.option {
+  display: inline;
+  font-weight: normal;
+}
+.form-checkboxes .form-item,
+.form-radios .form-item {
+  margin-top: 0.4em;
+  margin-bottom: 0.4em;
+}
+.form-type-radio .description,
+.form-type-checkbox .description {
+  margin-left: 2.4em;
+}
+input.form-checkbox,
+input.form-radio {
+  vertical-align: middle;
+}
+.form-required {
+  color: #f00;
+}
+.marker{
+  font-size: 0.9em;
+  color: #234600;
+  background-color: #e6f2ba;
+  padding: 0 0.4em;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+abbr.form-required,
+abbr.tabledrag-changed,
+abbr.ajax-changed {
+  text-decoration: none;
+}
+.form-item input.error,
+.form-item textarea.error,
+.form-item select.error {
+  border: 2px solid red;
+}
+.form-type-checkboxes.form-error,
+.form-type-radios.form-error {
+  border: 2px solid red;
+}
+/* Display border on a single checkbox, but not on checkboxes within a group. */
+.form-type-checkbox.form-error {
+  border: 2px solid red;
+}
+.form-type-checkboxes.form-error .form-type-checkbox.form-error {
+  border: none;
+}
+.form-item .radio-inline {
+  display: inline-block;
+  margin-right: 15px;
+  font-weight: normal;
 }
 
 @media all and (min-width: 768px) {

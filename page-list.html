@@ -1,0 +1,41 @@
+@extends('seven.layout')
+
+@section('main-content')
+<ul class="action-links">
+  <li><a href="/admin/page/add">添加单页</a></li>
+</ul>
+<table class="layui-table">
+    <thead>
+        <tr>
+          <th>ID</th>
+          <th>标题</th>
+          <th>状态</th>
+          <th>创建时间</th>
+          <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+      @foreach($pages as $r)
+          <tr role="row" class="even">
+            <td>
+                {{ $r->pid }}
+            </td>
+            <td>
+              {{ $r->title }}
+            </td>
+            <td>
+              {{ $r->status == '1' ? '发布' : '草稿' }}
+            </td>
+            <td>
+                {{ date("Y-m-d H:i:s", $r->created) }}
+            </td>
+            <td class=" td-handle">
+                <a href="/admin/page/edit/{{ $r->pid }}" class="layui-btn layui-btn-normal layui-btn-xs">编辑</a>
+                <a href="/admin/page/delete/{{ $r->pid }}" class="layui-btn layui-btn-danger layui-btn-xs ajax-delete">删除</a>
+            </td>
+        </tr>
+    @endforeach
+    </tbody>
+</table>
+{!! hunter_pager($pager, '上一页', '下一页') !!}
+@endsection

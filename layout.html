@@ -29,47 +29,9 @@
    </header>
    <div class="l-wrapper">
     <div class="l-wrapper-inner container container-fluid">
+     {!! $messages !!}
      <div class="l-content" role="main" aria-label="Main content">
-       <table class="layui-table">
-         <tbody>
-             <tr>
-                 <td style="width: 400px;">操作系统</td>
-                 <td>{{ PHP_OS }}</td>
-             </tr>
-             <tr>
-                 <td>运行环境</td>
-                 <td>{{ $_SERVER["SERVER_SOFTWARE"] }}</td>
-             </tr>
-             <tr>
-                 <td>WEB服务端口</td>
-                 <td>{{ $_SERVER['SERVER_PORT'] }}</td>
-             </tr>
-             <tr>
-                 <td>网站文档目录</td>
-                 <td>{{ $_SERVER["DOCUMENT_ROOT"] }}</td>
-             </tr>
-             <tr>
-                 <td>浏览器信息</td>
-                 <td>{{ substr($_SERVER['HTTP_USER_AGENT'], 0, 40) }}</td>
-             </tr>
-             <tr>
-                 <td>上传附件限制</td>
-                 <td>{{ ini_get('upload_max_filesize') }}</td>
-             </tr>
-             <tr>
-                 <td>PHP版本</td>
-                 <td>{{ PHP_VERSION }}</td>
-             </tr>
-             <tr>
-                 <td>服务器域名</td>
-                 <td>{{ $_SERVER['SERVER_NAME'] }}</td>
-             </tr>
-             <tr>
-                 <td>IP地址</td>
-                 <td>{{ $_SERVER['REMOTE_ADDR'] }}</td>
-             </tr>
-         </tbody>
-       </table>
+       @yield('main-content')
      </div>
     </div>
    </div>
@@ -91,10 +53,13 @@
         <a href="/admin/content" class="admin-content">内容管理</a>
         <ul class="dropdown">
          <li class="expandable">
-          <a href="/node/add" class="node-add">添加内容</a>
+          <a href="/admin/page/list" class="node-add">单页管理</a>
           <ul class="dropdown">
-           <li><a href="/node/add/page">单页</a></li>
-           <li><a href="/node/add/page">新闻</a></li>
+           <li><a href="/admin/page/add">添加</a></li>
+          </ul>
+          <a href="/admin/news/list" class="node-add">新闻管理</a>
+          <ul class="dropdown">
+           <li><a href="/admin/news/add">添加</a></li>
           </ul>
          </li>
         </ul>
@@ -104,5 +69,6 @@
     </ul>
    </div>
   </div>
+  @yield('footer-js')
  </body>
 </html>
