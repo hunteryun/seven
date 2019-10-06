@@ -1,77 +1,46 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr" class="js admin-bar">
+<html lang="en" dir="ltr" class="no-touchevents details js">
  <head>
   <meta charset="utf-8" />
-  <meta name="Generator" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="Generator" content="HunterPHP (http://www.hunterphp.com)" />
+  <meta name="MobileOptimized" content="width" />
+  <meta name="HandheldFriendly" content="true" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="/theme/seven/images/favicon.ico" type="image/vnd.microsoft.icon" />
   <title>管理中心</title>
-  <link rel="stylesheet" href="/theme/seven/assets/css/normalize.css">
-  <link rel="stylesheet" href="/theme/seven/assets/css/base.css">
-  <link rel="stylesheet" href="/theme/seven/assets/css/style.css">
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/normalize.css">
+  <link rel="stylesheet" media="all" href="/core/misc/normalize-fixes.css?pyxs5p" />
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/dropbutton.css">
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/system.admin.css">
+  <link rel="stylesheet" media="all" href="/core/themes/stable/css/toolbar/toolbar.module.css?pyxs5p" />
+  <link rel="stylesheet" media="all" href="/modules/admin_toolbar/css/admin.toolbar_search.css?pyxs5p" />
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/elements.css">
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/action-links.css">
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/content-header.css">
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/buttons.css">
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/dropbutton.component.css">
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/tables.css">
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/form.css">
   <link rel="stylesheet" href="/theme/seven/assets/css/admin_bar.css">
   <script src="/theme/seven/assets/js/jquery.min.js"></script>
   <script src="/theme/seven/assets/js/main.js"></script>
-  <!--[if lte IE 8]>
-  <script src="http://midi/core/misc/html5.js?v=3.7.2"></script>
-  <![endif]-->
  </head>
- <body class="page logged-in has-flexbox">
-  <div class="layout--boxton layout">
-   <header class="l-header" role="banner">
-    <div class="l-header-inner container container-fluid">
-     <div class="tabs">
-      <ul class="tabs primary">
-       <li class="active"><a href="/admin" class="active"><span class="responsive-tabs-link-text-wrapper">首页</span></a></li>
-      </ul>
+ <body class="toolbar-tray-open user-logged-in path-admin toolbar-fixed toolbar-horizontal">
+  <div class="dialog-off-canvas-main-canvas">
+   <header class="content-header clearfix">
+    <div class="layout-container">
+     <div class="region region-header">
+      <div id="block-seven-page-title" class="block block-core block-page-title-block">
+       <h1 class="js-quickedit-page-title page-title">单页管理</h1>
+      </div>
      </div>
     </div>
    </header>
-   <div class="l-wrapper">
-    <div class="l-wrapper-inner container container-fluid">
-     <div class="l-content" role="main" aria-label="Main content">
-       <table class="layui-table">
-         <tbody>
-             <tr>
-                 <td style="width: 400px;">操作系统</td>
-                 <td>{{ PHP_OS }}</td>
-             </tr>
-             <tr>
-                 <td>运行环境</td>
-                 <td>{{ $_SERVER["SERVER_SOFTWARE"] }}</td>
-             </tr>
-             <tr>
-                 <td>WEB服务端口</td>
-                 <td>{{ $_SERVER['SERVER_PORT'] }}</td>
-             </tr>
-             <tr>
-                 <td>网站文档目录</td>
-                 <td>{{ $_SERVER["DOCUMENT_ROOT"] }}</td>
-             </tr>
-             <tr>
-                 <td>浏览器信息</td>
-                 <td>{{ substr($_SERVER['HTTP_USER_AGENT'], 0, 40) }}</td>
-             </tr>
-             <tr>
-                 <td>上传附件限制</td>
-                 <td>{{ ini_get('upload_max_filesize') }}</td>
-             </tr>
-             <tr>
-                 <td>PHP版本</td>
-                 <td>{{ PHP_VERSION }}</td>
-             </tr>
-             <tr>
-                 <td>服务器域名</td>
-                 <td>{{ $_SERVER['SERVER_NAME'] }}</td>
-             </tr>
-             <tr>
-                 <td>IP地址</td>
-                 <td>{{ $_SERVER['REMOTE_ADDR'] }}</td>
-             </tr>
-         </tbody>
-       </table>
-     </div>
-    </div>
+   <div class="layout-container">
+    <main class="page-content clearfix" role="main">
+     {!! $messages !!}
+     @yield('main-content')
+    </main>
    </div>
   </div>
   <div id="admin-bar" class="admin-bar-site-midi admin-bar-processed" style="">
@@ -91,10 +60,13 @@
         <a href="/admin/content" class="admin-content">内容管理</a>
         <ul class="dropdown">
          <li class="expandable">
-          <a href="/node/add" class="node-add">添加内容</a>
+          <a href="/admin/page/list" class="node-add">单页管理</a>
           <ul class="dropdown">
-           <li><a href="/node/add/page">单页</a></li>
-           <li><a href="/node/add/page">新闻</a></li>
+           <li><a href="/admin/page/add">添加</a></li>
+          </ul>
+          <a href="/admin/news/list" class="node-add">新闻管理</a>
+          <ul class="dropdown">
+           <li><a href="/admin/news/add">添加</a></li>
           </ul>
          </li>
         </ul>
@@ -104,5 +76,6 @@
     </ul>
    </div>
   </div>
+  @yield('footer-js')
  </body>
 </html>
