@@ -1,0 +1,47 @@
+@extends('seven.layout')
+
+@section('main-content')
+<ul class="action-links">
+  <li>
+    <a href="/admin/eck/add" class="button button-action button--primary button--small">添加Entity类型</a>
+  </li>
+</ul>
+<table class="layui-table">
+    <thead>
+        <tr>
+          <th>ID</th>
+          <th>名称</th>
+          <th>状态</th>
+          <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+      @foreach($entitys as $r)
+          <tr role="row" class="even">
+            <td>
+                {{ $r->etid }}
+            </td>
+            <td>
+              {{ $r->name }}
+            </td>
+            <td>
+              {{ $r->status == '1' ? '启用' : '停用' }}
+            </td>
+            <td class=" td-handle">
+              <div class="dropbutton-wrapper dropbutton-multiple">
+               <div class="dropbutton-widget">
+                <ul class="dropbutton">
+                 <li class="dropbutton-action"><a href="/admin/eck/fields">管理字段</a></li>
+                 <li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">List additional actions</span></span></button></li>
+                 <li class="dropbutton-action secondary-action"><a href="/admin/eck/edit/{{ $r->etid }}">编辑</a></li>
+                 <li class="dropbutton-action secondary-action"><a href="/admin/eck/del/{{ $r->etid }}">删除</a></li>
+                </ul>
+               </div>
+              </div>
+            </td>
+        </tr>
+    @endforeach
+    </tbody>
+</table>
+{!! hunter_pager($pager, '上一页', '下一页') !!}
+@endsection

@@ -1,6 +1,46 @@
 @extends('seven.layout')
 
 @section('main-content')
+<div class="region region-content">
+ <div id="block-seven-local-actions">
+  <ul class="action-links">
+   <li><a href="/admin/structure/eck/add" class="button button-action button--primary button--small" data-drupal-link-system-path="admin/structure/eck/add">Add entity type</a></li>
+  </ul>
+ </div>
+ <div id="block-seven-content" class="block block-system block-system-main-block">
+  <div class="tableresponsive-toggle-columns">
+   <button type="button" class="link tableresponsive-toggle" title="Show table cells that were hidden to make the table fit within a small screen." style="display: none;">Hide lower priority columns</button>
+  </div>
+  <table class="responsive-enabled" data-striping="1">
+   <thead>
+    <tr>
+     <th>Entity Type</th>
+     <th>Machine Name</th>
+     <th>Operations</th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr class="odd">
+     <td>news</td>
+     <td>news</td>
+     <td>
+      <div class="dropbutton-wrapper dropbutton-multiple">
+       <div class="dropbutton-widget">
+        <ul class="dropbutton">
+         <li class="add-content dropbutton-action"><a href="/admin/content/news/add/test">Add content</a></li>
+         <li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">List additional actions</span></span></button></li>
+         <li class="content-list dropbutton-action secondary-action"><a href="/admin/content/news">Content list</a></li>
+         <li class="bundle-list dropbutton-action secondary-action"><a href="/admin/structure/eck/news/bundles">Bundle list</a></li>
+         <li class="edit dropbutton-action secondary-action"><a href="/admin/structure/eck/news?destination=/admin/structure/eck">Edit</a></li>
+         <li class="delete dropbutton-action secondary-action"><a href="/admin/structure/eck/news/delete?destination=/admin/structure/eck">Delete</a></li>
+        </ul>
+       </div>
+      </div></td>
+    </tr>
+   </tbody>
+  </table>
+ </div>
+</div>
 <table class="layui-table">
   <tbody>
       <tr>

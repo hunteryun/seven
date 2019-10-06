@@ -2,7 +2,9 @@
 
 @section('main-content')
 <ul class="action-links">
-  <li><a href="/admin/page/add">添加单页</a></li>
+  <li>
+    <a href="/admin/page/add" class="button button-action button--primary button--small">添加单页</a>
+  </li>
 </ul>
 <table class="layui-table">
     <thead>
@@ -30,8 +32,14 @@
                 {{ date("Y-m-d H:i:s", $r->created) }}
             </td>
             <td class=" td-handle">
-                <a href="/admin/page/edit/{{ $r->pid }}" class="layui-btn layui-btn-normal layui-btn-xs">编辑</a>
-                <a href="/admin/page/delete/{{ $r->pid }}" class="layui-btn layui-btn-danger layui-btn-xs ajax-delete">删除</a>
+              <div class="dropbutton-wrapper dropbutton-single">
+               <div class="dropbutton-widget">
+                <ul class="dropbutton">
+                 <li class="edit dropbutton-action"><a href="/admin/page/edit/{{ $r->pid }}">编辑</a></li>
+                 <li class="delete dropbutton-action"><a href="/admin/page/del/{{ $r->pid }}">删除</a></li>
+                </ul>
+               </div>
+              </div>
             </td>
         </tr>
     @endforeach

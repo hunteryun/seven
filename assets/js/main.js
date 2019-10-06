@@ -14,4 +14,12 @@ $(function(){
       $link.removeClass('expanded-trail');
     }, 400);
   });
+  $(".dropbutton-toggle").click(function(){
+    $(this).closest('.dropbutton-wrapper').toggleClass('open');
+  });
+  $(".dropbutton-wrapper").mouseleave(function(){
+    var isBool = typeof show === 'boolean';
+    show = isBool ? show : !$(this).hasClass('open');
+    $(this).toggleClass('open', show);
+  });
 })
