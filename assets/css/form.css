@@ -319,7 +319,7 @@ select {
     border: 1px solid #a6a6a6;
     border-radius: 0.143em;
     background:
-      url(../../../../misc/icons/333333/caret-down.svg) no-repeat 99% 63%,
+      url(../images/caret-down.svg) no-repeat 99% 63%,
       -webkit-linear-gradient(top, #f6f6f3, #e7e7df); /* LTR */
 
     text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
@@ -335,7 +335,7 @@ select {
   select:hover {
     color: #1a1a1a;
     background-image:
-      url(../../../../misc/icons/333333/caret-down.svg),
+      url(../images/caret-down.svg),
       -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
   }
   select:hover {

@@ -3,29 +3,29 @@
 @section('main-content')
 <ul class="action-links">
   <li>
-    <a href="/admin/eck/add" class="button button-action button--primary button--small">添加Entity类型</a>
+    <a href="/admin/eck/{{ $machine_name }}/field/add" class="button button-action button--primary button--small">添加字段</a>
   </li>
 </ul>
 <table class="layui-table">
     <thead>
         <tr>
-          <th>ID</th>
-          <th>名称</th>
+          <th>标签</th>
           <th>机器名</th>
+          <th>字段类型</th>
           <th>操作</th>
         </tr>
     </thead>
     <tbody>
-      @foreach($entitys as $r)
+      @foreach($fields as $r)
           <tr role="row" class="even">
             <td>
-                {{ $r->etid }}
-            </td>
-            <td>
-              {{ $r->name }}
+                {{ $r->label }}
             </td>
             <td>
               {{ $r->machine_name }}
+            </td>
+            <td>
+              {{ $r->field_type }}
             </td>
             <td class=" td-handle">
               <div class="dropbutton-wrapper dropbutton-multiple">
@@ -43,5 +43,4 @@
     @endforeach
     </tbody>
 </table>
-{!! hunter_pager($pager, '上一页', '下一页') !!}
 @endsection
