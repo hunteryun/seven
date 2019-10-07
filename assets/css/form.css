@@ -162,7 +162,7 @@ ul.tips li {
 [dir="rtl"] ul.tips li {
   margin: 0.25em 1.5em 0.25em 0;
 }
-label{
+label {
     margin:10px 10px 5px 0;
     display: inline-block;
 }
@@ -194,6 +194,37 @@ label{
     display: none;
 }
 .a-radio:checked~.b-radio:before{
+    display: block;
+}
+
+.a-checkbox{
+    display: none;
+}
+.b-checkbox{
+    display: inline-block;
+    border:1px solid #b4b4b4;
+    width:16px;
+    height: 16px;
+    border-radius: 2px;
+    vertical-align: top;
+    margin-right: 5px;
+    position: relative;
+}
+.b-checkbox:before{
+    content: '';
+    font-size: 0;
+    width: 10px;
+    height: 10px;
+    background: #3197EE;
+    position: absolute;
+    left:50%;
+    top:50%;
+    margin-left: -5px;
+    margin-top: -5px;
+    border-radius: 2px;
+    display: none;
+}
+.a-checkbox:checked~.b-checkbox:before{
     display: block;
 }
 .form-type-radio .description,

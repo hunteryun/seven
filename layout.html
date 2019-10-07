@@ -21,6 +21,7 @@
   <link rel="stylesheet" media="all" href="/theme/seven/assets/css/dropbutton.component.css">
   <link rel="stylesheet" media="all" href="/theme/seven/assets/css/tables.css">
   <link rel="stylesheet" media="all" href="/theme/seven/assets/css/form.css">
+  <link rel="stylesheet" media="all" href="/theme/seven/assets/css/messages.css">
   <link rel="stylesheet" href="/theme/seven/assets/css/admin_bar.css">
   <script src="/theme/seven/assets/js/jquery.min.js"></script>
   <script src="/theme/seven/assets/js/main.js"></script>
@@ -31,7 +32,7 @@
     <div class="layout-container">
      <div class="region region-header">
       <div id="block-seven-page-title" class="block block-core block-page-title-block">
-       <h1 class="js-quickedit-page-title page-title">单页管理</h1>
+       <h1 class="js-quickedit-page-title page-title">{{ $page_title }}</h1>
       </div>
      </div>
     </div>
@@ -61,13 +62,9 @@
         <ul class="dropdown">
          <li class="expandable">
           <a href="/admin/page/list" class="node-add">单页管理</a>
-          <ul class="dropdown">
-           <li><a href="/admin/page/add">添加</a></li>
-          </ul>
           <a href="/admin/news/list" class="node-add">新闻管理</a>
-          <ul class="dropdown">
-           <li><a href="/admin/news/add">添加</a></li>
-          </ul>
+          <a href="/admin/eck/list" class="node-add">Entity管理</a>
+          <a href="/admin/views/list" class="node-add">Views管理</a>
          </li>
         </ul>
        </li>

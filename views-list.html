@@ -1,0 +1,49 @@
+@extends('seven.layout')
+
+@section('main-content')
+<ul class="action-links">
+  <li>
+    <a href="/admin/views/add" class="button button-action button--primary button--small">添加view</a>
+    <a href="/admin/views/view/import" class="button button-action button--primary button--small">导入</a>
+    <a href="/admin/views/settings" class="button button-action button--primary button--small">设置</a>
+  </li>
+</ul>
+<table class="layui-table">
+    <thead>
+        <tr>
+          <th>名称</th>
+          <th>机器名</th>
+          <th>描述</th>
+          <th>类型</th>
+          <th>路径</th>
+          <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+      @if(!empty($list))
+      @foreach ($list as $v)
+      <tr>
+        <td>{{ $v['view_name'] }}</td>
+        <td>{{ $v['view_machine_name'] }}</td>
+        <td>{{ $v['view_description'] }}</td>
+        <td>{{ $v['json_export'] == 'true' ? 'API' : !empty($v['view_path']) ? 'Page' : 'Block' }}</td>
+        <td><a href="{{ $v['view_path'] }}" target="_blank">{{ $v['view_path'] }}</a></td>
+        <td>
+          <div class="dropbutton-wrapper dropbutton-multiple">
+           <div class="dropbutton-widget">
+            <ul class="dropbutton">
+             <li class="dropbutton-action"><a href="/admin/views/view/{{ $v['view_machine_name'] }}/edit">编辑</a></li>
+             <li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">List additional actions</span></span></button></li>
+             <li class="dropbutton-action secondary-action"><a href="/admin/views/view/{{ $v['view_machine_name'] }}/export">导出</a></li>
+             <li class="dropbutton-action secondary-action"><a href="/admin/views/view/{{ $v['view_machine_name'] }}/copy">克隆</a></li>
+             <li class="dropbutton-action secondary-action"><a href="/admin/views/view/{{ $v['view_machine_name'] }}/delete">删除</a></li>
+            </ul>
+           </div>
+          </div>
+        </td>
+      </tr>
+      @endforeach
+      @endif
+    </tbody>
+</table>
+@endsection
