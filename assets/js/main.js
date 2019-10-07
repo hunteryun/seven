@@ -18,8 +18,8 @@ $(function(){
     $(this).closest('.dropbutton-wrapper').toggleClass('open');
   });
   $(".dropbutton-wrapper").mouseleave(function(){
-    var isBool = typeof show === 'boolean';
-    show = isBool ? show : !$(this).hasClass('open');
-    $(this).toggleClass('open', show);
+    if($(this).hasClass('open')) {
+      $(this).toggleClass('open');
+    }
   });
 })
