@@ -38,7 +38,7 @@
     </div>
    </header>
    <div class="layout-container">
-    <main class="page-content clearfix" role="main">
+    <main class="page-content clearfix" role="main" id="App">
      {!! $messages !!}
      @yield('main-content')
     </main>
@@ -61,10 +61,20 @@
         <a href="/admin/content" class="admin-content">内容管理</a>
         <ul class="dropdown">
          <li class="expandable">
-          <a href="/admin/page/list" class="node-add">单页管理</a>
-          <a href="/admin/news/list" class="node-add">新闻管理</a>
-          <a href="/admin/eck" class="node-add">Entity管理</a>
-          <a href="/admin/views" class="node-add">Views管理</a>
+          <a href="/admin/page/list">单页管理</a>
+         </li>
+         @if(!empty($ets = get_all_entity()))
+         @foreach($ets as $et)
+         <li>
+          <a href="/admin/eck/{{ $et->machine_name }}/content">{{ $et->name }}管理</a>
+         </li>
+         @endforeach
+         @endif
+         <li>
+          <a href="/admin/eck">Entity管理</a>
+         </li>
+         <li>
+          <a href="/admin/views">Views管理</a>
          </li>
         </ul>
        </li>

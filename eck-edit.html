@@ -1,0 +1,35 @@
+@extends('seven.layout')
+
+@section('main-content')
+ {!! hunter_form_render('seven', $form) !!}
+@endsection
+
+@section('footer-js')
+<script src="/theme/seven/assets/js/lodash.min.js"></script>
+<script>
+$("#name").keyup(_.debounce(
+  function(){
+    //如果文本框为空，不发送请求
+    if($("#name").val().length == 0){
+        $("#machine_name_wapper").hide(0);
+        return false;
+    }
+    var name = $("#name").val();
+    $.ajax({
+        type:"post",
+        url :'/admin/api/machine-name',
+        data: {"name":name},
+        datatype:"json",
+        success:function(result){
+            if(result){
+                $("#machine_name_wapper").show(0);
+                $("#machine_name").val(result);
+            }
+        }
+    })
+  },
+  // 这是我们为判定用户停止输入等待的毫秒数
+  500
+))
+</script>
+@endsection

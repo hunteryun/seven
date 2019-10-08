@@ -242,6 +242,13 @@ label {
   font-size: 1em;
   line-height: normal;
 }
+.form-textarea-wrapper textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  min-height: 100px;
+}
 
 input.form-autocomplete,
 input.form-text,

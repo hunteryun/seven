@@ -3,21 +3,23 @@
 @section('main-content')
 <ul class="action-links">
   <li>
-    <a href="/admin/eck/{{ $machine_name }}/field/add" class="button button-action button--primary button--small">添加字段</a>
+    <a href="/admin/eck/{{ $machine_name }}/content/add" class="button button-action button--primary button--small">添加{{ get_eck_name_bymachine_name($machine_name) }}</a>
   </li>
 </ul>
 <table>
     <thead>
         <tr>
-          <th>标签</th>
-          <th>机器名</th>
-          <th>字段类型</th>
+          @if(!empty($fields))
+          @foreach($fields as $f)
+          <th>{{ $f->label }}</th>
+          @endforeach
+          @endif
           <th>操作</th>
         </tr>
     </thead>
     <tbody>
-      @if(!empty($fields))
-      @foreach($fields as $r)
+      @if(!empty($contents))
+      @foreach($contents as $r)
           <tr role="row" class="even">
             <td>
                 {{ $r->label }}
