@@ -349,6 +349,22 @@ select {
 #imagePreview {
   margin-top: 20px;
 }
+.sigle-upload {
+  display: inline-block;
+  position: relative;
+}
+.sigle-upload .btn {
+  margin-left: 5px;
+  height: 30px;
+}
+.sigle-upload input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer
+}
 /**
  * Select elements - Webkit only
  */

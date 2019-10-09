@@ -31,15 +31,21 @@
             @foreach($fields as $f)
             @if($f->field_type != 'textarea' && $f->field_type != 'system')
             @if($f->field_type == 'image')
+            @if($f->field_value_type == 'multi')
             <td>
               @if(!empty(json_decode($r->{$f->field_machine_name})) && json_decode($r->{$f->field_machine_name}) != '[]')
               @foreach(json_decode($r->{$f->field_machine_name}) as $key => $sigle_img)
               @if($key < 3)
-                <img src="{{ $sigle_img->image }}" width="70"> 
+                <img src="{{ $sigle_img->image }}" width="70">
               @endif
               @endforeach
               @endif
             </td>
+            @else
+            <td>
+                <img src="{{ $r->{$f->field_machine_name} }}" width="70">
+            </td>
+            @endif
             @else
             <td>
                 {{ $r->{$f->field_machine_name} }}
