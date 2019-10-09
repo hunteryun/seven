@@ -65,8 +65,11 @@
          </li>
          @if(!empty($ets = get_all_entity()))
          @foreach($ets as $et)
-         <li>
+         <li class="expandable">
           <a href="/admin/eck/{{ $et->machine_name }}/content">{{ $et->name }}管理</a>
+          <ul class="dropdown">
+           <li><a href="/admin/eck/{{ $et->machine_name }}/content/add">添加{{ $et->name }}</a></li>
+          </ul>
          </li>
          @endforeach
          @endif

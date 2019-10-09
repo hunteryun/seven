@@ -314,6 +314,41 @@ select {
   max-width: 100%;
 }
 
+.uploader-img-list .item {
+  display: inline-block;
+  margin-right: 10px;
+  position: relative;
+}
+.uploader-img-list .item .del-pimg {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: block;
+  background-image: url(../images/cross.png);
+  background-color: #fff;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+.uploader-img-list .item .upload-img {
+  width: 92px;
+  height: 92px;
+}
+.simple-upload {
+  display: inline-block;
+}
+.simple-upload input {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer
+}
+#imagePreview {
+  margin-top: 20px;
+}
 /**
  * Select elements - Webkit only
  */

@@ -9,9 +9,12 @@
 <table>
     <thead>
         <tr>
+          <th>ID</th>
           @if(!empty($fields))
           @foreach($fields as $f)
+          @if($f->field_type != 'textarea')
           <th>{{ $f->label }}</th>
+          @endif
           @endforeach
           @endif
           <th>操作</th>
@@ -20,16 +23,40 @@
     <tbody>
       @if(!empty($contents))
       @foreach($contents as $r)
-          <tr role="row" class="even">
+          <tr role="row">
             <td>
-                {{ $r->label }}
+                {{ $r->{substr($machine_name, 0, 1 ).'id'} }}
             </td>
+            @if(!empty($fields))
+            @foreach($fields as $f)
+            @if($f->field_type != 'textarea' && $f->field_type != 'system')
+            @if($f->field_type == 'image')
             <td>
-              {{ $r->field_machine_name }}
+              @if(!empty(json_decode($r->{$f->field_machine_name})) && json_decode($r->{$f->field_machine_name}) != '[]')
+              @foreach(json_decode($r->{$f->field_machine_name}) as $key => $sigle_img)
+              @if($key < 3)
+                <img src="{{ $sigle_img->image }}" width="70"> 
+              @endif
+              @endforeach
+              @endif
             </td>
+            @else
             <td>
-              {{ $r->field_type }}
+                {{ $r->{$f->field_machine_name} }}
             </td>
+            @endif
+            @elseif($f->field_type == 'system' && $f->field_machine_name == 'uid')
+            <td>
+                {{ get_username_byid($r->uid) }}
+            </td>
+            @elseif($f->field_type == 'system' && ($f->field_machine_name == 'created' || $f->field_machine_name == 'updated'))
+            <td>
+                {{ date("Y-m-d H:i:s", $r->{$f->field_machine_name}) }}
+            </td>
+            @else
+            @endif
+            @endforeach
+            @endif
             <td class="op">
               <div class="dropbutton-wrapper dropbutton-single">
                <div class="dropbutton-widget">
