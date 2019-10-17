@@ -18,8 +18,17 @@ $(function(){
     $(this).closest('.dropbutton-wrapper').toggleClass('open');
   });
   $(".dropbutton-wrapper").mouseleave(function(){
-    var isBool = typeof show === 'boolean';
-    show = isBool ? show : !$(this).hasClass('open');
-    $(this).toggleClass('open', show);
+    if($(this).hasClass('open')) {
+      $(this).toggleClass('open');
+    }
   });
+
+  $(".con").eq(0).show();
+  $(".tab-title span").click(function(){
+      var num =$(".tab-title span").index(this);
+      $(".con").hide();
+      $(".con").eq(num).show();
+      $(this).attr("class","active spanList");
+      $(this).siblings().attr("class","spanList");
+  })
 })

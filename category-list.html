@@ -1,0 +1,23 @@
+@extends('seven.layout')
+
+@section('main-content')
+<ul class="action-links">
+  <li>
+    <a href="/admin/category/add?cid=0" class="button button-action button--primary button--small">添加栏目</a>
+  </li>
+</ul>
+<table id="userTable">
+    <thead>
+        <tr>
+          <th>ID</th>
+          <th>名称</th>
+          <th>链接</th>
+          <th>启用</th>
+          <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {!! $cats_list !!}
+    </tbody>
+</table>
+@endsection

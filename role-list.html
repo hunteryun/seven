@@ -1,0 +1,45 @@
+@extends('seven.layout')
+
+@section('main-content')
+<ul class="action-links">
+  <li>
+    <a href="/admin/role/add" class="button button-action button--primary button--small">添加角色</a>
+  </li>
+</ul>
+<table>
+    <thead>
+        <tr>
+          <th>ID</th>
+          <th>角色名称</th>
+          <th>权重</th>
+          <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+      @foreach($roles as $r)
+          <tr>
+            <td>
+                {{ $r->rid }}
+            </td>
+            <td>
+              {{ $r->name }}
+            </td>
+
+            <td>
+              {{ $r->weight }}
+            </td>
+            <td class="op">
+              <div class="dropbutton-wrapper dropbutton-single">
+               <div class="dropbutton-widget">
+                <ul class="dropbutton">
+                 <li class="edit dropbutton-action"><a href="/admin/role/edit/{{ $r->rid }}">编辑</a></li>
+                 <li class="delete dropbutton-action"><a href="/admin/role/del/{{ $r->rid }}">删除</a></li>
+                </ul>
+               </div>
+              </div>
+            </td>
+        </tr>
+      @endforeach
+    </tbody>
+</table>
+@endsection

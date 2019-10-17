@@ -1,0 +1,46 @@
+@extends('seven.layout')
+
+@section('main-content')
+<ul class="action-links">
+  <li>
+    <a href="/admin/eck/{{ $machine_name }}/field/add" class="button button-action button--primary button--small">添加字段</a>
+  </li>
+</ul>
+<table>
+    <thead>
+        <tr>
+          <th>标签</th>
+          <th>机器名</th>
+          <th>字段类型</th>
+          <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+      @if(!empty($fields))
+      @foreach($fields as $r)
+          <tr role="row" class="even">
+            <td>
+                {{ $r->label }}
+            </td>
+            <td>
+              {{ $r->field_machine_name }}
+            </td>
+            <td>
+              {{ $r->field_type }}
+            </td>
+            <td class="op">
+              <div class="dropbutton-wrapper dropbutton-single">
+               <div class="dropbutton-widget">
+                <ul class="dropbutton">
+                 <li class="edit dropbutton-action"><a href="/admin/eck/{{ $machine_name }}/field/edit/{{ $r->field_machine_name }}">编辑</a></li>
+                 <li class="delete dropbutton-action"><a href="/admin/eck/{{ $machine_name }}/field/del/{{ $r->field_machine_name }}">删除</a></li>
+                </ul>
+               </div>
+              </div>
+            </td>
+        </tr>
+      @endforeach
+      @endif
+    </tbody>
+</table>
+@endsection

@@ -6,12 +6,11 @@
     <a href="/admin/eck/add" class="button button-action button--primary button--small">添加Entity类型</a>
   </li>
 </ul>
-<table class="layui-table">
+<table>
     <thead>
         <tr>
-          <th>ID</th>
           <th>名称</th>
-          <th>状态</th>
+          <th>机器名</th>
           <th>操作</th>
         </tr>
     </thead>
@@ -19,19 +18,16 @@
       @foreach($entitys as $r)
           <tr role="row" class="even">
             <td>
-                {{ $r->etid }}
-            </td>
-            <td>
               {{ $r->name }}
             </td>
             <td>
-              {{ $r->status == '1' ? '启用' : '停用' }}
+              {{ $r->machine_name }}
             </td>
-            <td class=" td-handle">
+            <td class="op">
               <div class="dropbutton-wrapper dropbutton-multiple">
                <div class="dropbutton-widget">
                 <ul class="dropbutton">
-                 <li class="dropbutton-action"><a href="/admin/eck/fields">管理字段</a></li>
+                 <li class="dropbutton-action"><a href="/admin/eck/{{ $r->machine_name }}/fields">管理字段</a></li>
                  <li class="dropbutton-toggle"><button type="button"><span class="dropbutton-arrow"><span class="visually-hidden">List additional actions</span></span></button></li>
                  <li class="dropbutton-action secondary-action"><a href="/admin/eck/edit/{{ $r->etid }}">编辑</a></li>
                  <li class="dropbutton-action secondary-action"><a href="/admin/eck/del/{{ $r->etid }}">删除</a></li>

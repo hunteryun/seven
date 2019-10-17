@@ -224,6 +224,9 @@ label {
     border-radius: 2px;
     display: none;
 }
+.form-disabled .b-checkbox:before{
+    background: #9A9A9A;
+}
 .a-checkbox:checked~.b-checkbox:before{
     display: block;
 }
@@ -241,6 +244,13 @@ label {
   border-radius: 2px;
   font-size: 1em;
   line-height: normal;
+}
+.form-textarea-wrapper textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  min-height: 100px;
 }
 
 input.form-autocomplete,
@@ -307,6 +317,56 @@ select {
   max-width: 100%;
 }
 
+.uploader-img-list .item {
+  display: inline-block;
+  margin-right: 10px;
+  position: relative;
+}
+.uploader-img-list .item .del-pimg {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: block;
+  background-image: url(../images/cross.png);
+  background-color: #fff;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+.uploader-img-list .item .upload-img {
+  max-width: 200px;
+}
+.simple-upload {
+  display: inline-block;
+}
+.simple-upload input {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer
+}
+#imagePreview {
+  margin-top: 20px;
+}
+.sigle-upload {
+  display: inline-block;
+  position: relative;
+}
+.sigle-upload .btn {
+  margin-left: 5px;
+  height: 30px;
+}
+.sigle-upload input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  cursor: pointer
+}
 /**
  * Select elements - Webkit only
  */
@@ -319,7 +379,7 @@ select {
     border: 1px solid #a6a6a6;
     border-radius: 0.143em;
     background:
-      url(../../../../misc/icons/333333/caret-down.svg) no-repeat 99% 63%,
+      url(../images/caret-down.svg) no-repeat 99% 63%,
       -webkit-linear-gradient(top, #f6f6f3, #e7e7df); /* LTR */
 
     text-shadow: 0 1px hsla(0, 0%, 100%, 0.6);
@@ -335,7 +395,7 @@ select {
   select:hover {
     color: #1a1a1a;
     background-image:
-      url(../../../../misc/icons/333333/caret-down.svg),
+      url(../images/caret-down.svg),
       -webkit-linear-gradient(top, #fcfcfa, #e9e9dd);
   }
   select:hover {

@@ -1,0 +1,16 @@
+@extends('seven.layout')
+
+@section('main-content')
+  {!! hunter_form_render('seven', $form, 'user', $user) !!}
+@endsection
+
+@section('footer-js')
+<script src="/theme/seven/assets/ueditor/ueditor.config.js"></script>
+<script src="/theme/seven/assets/ueditor/ueditor.all.js"></script>
+<script>
+     var ue = UE.getEditor('content', {
+       initialFrameWidth: '100%',
+       initialFrameHeight: 300
+     });
+</script>
+@endsection

@@ -132,10 +132,10 @@ th.select-all {
   margin-bottom: 1.2em;
 }
 
-.ueditor table {
+table.edui-default {
   margin: 0;
 }
-.ueditor table tr {
+table.edui-default tr {
   padding: 0;
   border: none;
 }

@@ -9,11 +9,8 @@
   <link rel="shortcut icon" href="/theme/seven/images/favicon.ico" type="image/vnd.microsoft.icon" />
   <title>管理中心</title>
   <link rel="stylesheet" media="all" href="/theme/seven/assets/css/normalize.css">
-  <link rel="stylesheet" media="all" href="/core/misc/normalize-fixes.css?pyxs5p" />
   <link rel="stylesheet" media="all" href="/theme/seven/assets/css/dropbutton.css">
   <link rel="stylesheet" media="all" href="/theme/seven/assets/css/system.admin.css">
-  <link rel="stylesheet" media="all" href="/core/themes/stable/css/toolbar/toolbar.module.css?pyxs5p" />
-  <link rel="stylesheet" media="all" href="/modules/admin_toolbar/css/admin.toolbar_search.css?pyxs5p" />
   <link rel="stylesheet" media="all" href="/theme/seven/assets/css/elements.css">
   <link rel="stylesheet" media="all" href="/theme/seven/assets/css/action-links.css">
   <link rel="stylesheet" media="all" href="/theme/seven/assets/css/content-header.css">
@@ -32,13 +29,13 @@
     <div class="layout-container">
      <div class="region region-header">
       <div id="block-seven-page-title" class="block block-core block-page-title-block">
-       <h1 class="js-quickedit-page-title page-title">Entity类型管理</h1>
+       <h1 class="js-quickedit-page-title page-title">{{ $page_title }}</h1>
       </div>
      </div>
     </div>
    </header>
    <div class="layout-container">
-    <main class="page-content clearfix" role="main">
+    <main class="page-content clearfix" role="main" id="App">
      {!! $messages !!}
      @yield('main-content')
     </main>
@@ -61,11 +58,43 @@
         <a href="/admin/content" class="admin-content">内容管理</a>
         <ul class="dropdown">
          <li class="expandable">
-          <a href="/admin/page/list" class="node-add">单页管理</a>
-          <a href="/admin/eck/list" class="node-add">ECK Entity管理</a>
-          <a href="/admin/news/list" class="node-add">新闻管理</a>
+          <a href="/admin/page/list">单页管理</a>
+          <ul class="dropdown">
+           <li><a href="/admin/page/add">添加单页</a></li>
+          </ul>
+         </li>
+         @if(!empty($ets = get_all_entity()))
+         @foreach($ets as $et)
+         <li class="expandable">
+          <a href="/admin/eck/{{ $et->machine_name }}/content">{{ $et->name }}管理</a>
+          <ul class="dropdown">
+           <li><a href="/admin/eck/{{ $et->machine_name }}/content/add">添加{{ $et->name }}</a></li>
+          </ul>
+         </li>
+         @endforeach
+         @endif
+         <li>
+          <a href="/admin/eck">Entity管理</a>
+         </li>
+         <li>
+          <a href="/admin/views">Views管理</a>
          </li>
         </ul>
+       </li>
+       <li class="expandable">
+        <a href="/admin/category/list" class="admin-structure">分类管理</a>
+        <ul class="dropdown">
+         <li><a href="/admin/category/add?cid=0">添加分类</a></li>
+        </ul>
+       </li>
+       <li class="expandable">
+        <a href="/admin/user/list" class="admin-people">用户管理</a>
+        <ul class="dropdown">
+         <li><a href="/admin/role/list">角色管理</a></li>
+        </ul>
+       </li>
+       <li class="expandable">
+        <a href="/admin/site-config" class="admin-config">网站设置</a>
        </li>
       </ul>
      </li>

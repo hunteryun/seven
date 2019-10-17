@@ -1,0 +1,43 @@
+@extends('seven.layout')
+
+@section('main-content')
+ {!! hunter_form_render('seven', $form) !!}
+@endsection
+
+@section('footer-js')
+<script src="/theme/seven/assets/js/lodash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+<script>
+Vue.http.options.emulateJSON = true;
+
+var App = new Vue({
+  el: '#App',
+  data: {
+    label: '',
+    field_machine_name: '',
+    field_type: 'text',
+    field_options: '',
+    field_value_type: 'single',
+    field_category_partent: '1',
+    field_default_value: '',
+  },
+  methods: {
+    getMachineName: _.debounce(
+      function () {
+        var vm = this;
+        vm.$http.post('/admin/api/machine-name', {name:vm.label}).then(function (response) {
+          if (response.body.length != 0) {
+            vm.field_machine_name = response.body;
+          }
+        }, function (response) {
+          layer.alert('create error！', {icon: 5});
+        });
+      },
+      // 这是我们为判定用户停止输入等待的毫秒数
+      1000
+    ),
+  }
+});
+</script>
+@endsection

@@ -38,6 +38,9 @@
 .js td .dropbutton-widget {
   position: absolute;
 }
+.js td.op {
+  width: 26%;
+}
 .js td .dropbutton-wrapper {
   min-height: 2em;
 }

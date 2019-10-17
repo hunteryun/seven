@@ -1,0 +1,435 @@
+@extends('seven.layout')
+
+@section('main-content')
+<form class="view-config" action="#">
+  <div class="views-tabs">
+    <div class="tab-title">
+    	 <!-- Tab标题 -->
+       <span class="active spanList">基础设置</span>
+       <span class="spanList">查询设置</span>
+       <span class="spanList">高级设置</span>
+       <span class="spanList">模板</span>
+    </div>
+    <div class="context">
+         <!-- Tab内容 -->
+         <div class="con">
+           <div class="form-item">
+             <label class="form-label">名称</label>
+             <div class="input-inline-block">
+               <input type="text" class="form-text" name="view_name" v-model="view_name">
+               <span class="machine_name" v-show="view_name != '' && !edit_machine_name">机器名: @{{ view_machine_name }} [<a href="#" @click.prevent.prevent="editMachineName">编辑</a>]</span>
+             </div>
+           </div>
+
+           <div class="form-item" v-show="view_name != '' && edit_machine_name">
+             <label class="form-label">机器名</label>
+             <div class="input-block">
+               <input type="text" class="form-text" name="view_machine_name" :value="view_machine_name">
+             </div>
+           </div>
+
+           <div class="form-item">
+             <label class="form-label">标题</label>
+             <div class="input-block">
+               <input type="text" class="form-text" name="view_title" v-model="view_title">
+             </div>
+           </div>
+
+           <div class="form-item">
+             <label class="form-label">描述</label>
+             <div class="input-block">
+                <textarea name="view_description" class="description-textarea" v-model="view_description"></textarea>
+             </div>
+           </div>
+         </div>
+
+
+         <div class="con">
+           <div class="form-item">
+             <label class="form-label">选择查询表</label>
+             <div class="input-inline">
+               <select name="view_table" v-model="view_table" @change="updateField">
+                 <option value="">请选择表</option>
+                 <option v-for="(table, index) in tables" :value="index">@{{ index }}</option>
+               </select>
+               <span v-if="view_table != '' && !add_relationships">[<a href="#" @click.prevent.prevent="addRelationships">添加关联</a>]</span>
+             </div>
+           </div>
+
+           <div class="form-item" v-if="view_table != '' && add_relationships">
+             <div class="view_relations_list" v-if="view_relations.length != 0">
+               <ul>
+                 <draggable v-model="view_relations" :options="{group:'view_relations_list'}">
+                   <li v-for="(relation, key) in view_relations" :class="{'even': key % 2 === 0, 'odd': key % 2 !== 0 }" :key="key">
+                     <span @click.prevent="editRelation(relation)">@{{ view_table+'.'+relation.view_table_field }} (= @{{ relation.view_relation_table +'.'+ relation.view_relation_table_field }})</span>
+                     <button class="btn" @click.prevent="removeRelation(relation)">Remove</button>
+                     <button class="btn" @click.prevent="editRelation(relation)">Edit</button>
+                   </li>
+                 </draggable>
+               </ul>
+             </div>
+             <div class="input-block">
+               <table class="dataintable">
+                 <thead>
+                   <tr>
+                     <th width="30%">@{{ view_table }} 表关联字段</th>
+                     <th width="50%">关联表</th>
+                     <th width="20%">操作</th>
+                   </tr>
+                  </thead>
+                  <tbody>
+                   <tr>
+                     <td class="bsIE">
+                       <select name="view_table_field" v-model="new_view_table_field">
+                         <option value="">请选择表</option>
+                         <option  v-for="(field, key) in tables[view_table].fields" :value="key">@{{ field.name }}</option>
+                       </select>
+                     </td>
+                     <td class="bsIE">
+                       <select name="view_relation_table" v-model="new_view_relation_table" v-if="new_view_table_field != ''">
+                         <option value="">请选择表</option>
+                         <option v-for="(table, index) in tables" :value="index" v-if="black_relation_tables.indexOf(index) < 0">@{{ index }}</option>
+                       </select>
+                       <select name="view_relation_table_field" v-model="new_view_relation_table_field" v-if="new_view_relation_table != ''">
+                         <option value="">请选择表</option>
+                         <option v-for="(field, key) in tables[new_view_relation_table].fields" :value="key">@{{ field.name }}</option>
+                       </select>
+                     </td>
+                     <td class="bsChrome">
+                       <button class="btn btn-primary btn-mini" @click.prevent="addNewRelation" v-if="!edit_relation_mode">添加</button>
+                       <button class="btn btn-primary btn-mini" @click.prevent="doneEditRelation" v-if="edit_relation_mode">修改</button>
+                       <button class="btn btn-primary btn-mini" @click.prevent="cancelEditRelation" v-if="edit_relation_mode">取消</button>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+
+           <div class="form-item" pane="" v-if="view_table != ''">
+             <div class="input-block" v-if="fields">
+               <table class="dataintable">
+                 <thead>
+                   <tr>
+                     <th width="100%">选择字段</th>
+                   </tr>
+                  </thead>
+                  <tbody>
+                   <tr>
+                     <td class="bsIE">
+                       <ul>
+                         <li v-for="(field, key) in fields">
+                           <label class="form-type-checkbox">
+                             <input class="a-checkbox" type="checkbox" :name="'view_fields['+key+']'" :value="key" v-model="view_fields" :title="field.name">
+                             <span class="b-checkbox"></span>
+                             @{{ field.name }}
+                           </label>
+                         </li>
+                       </ul>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+
+           <div class="form-item" pane="" v-if="view_table != ''">
+             <label class="form-label">过滤</label>
+             <div class="view_filters_list" v-if="view_filters.length != 0">
+               <ul>
+                 <draggable v-model="view_filters" :options="{group:'views_filter_list'}">
+                   <li v-for="(filter, key) in view_filters" :class="{'even': key % 2 === 0, 'odd': key % 2 !== 0 }" :key="key">
+                     <span @click.prevent="editFilter(filter)">@{{ filter.field }} (@{{ filter.exposed ? 'exposed' : filter.lable +' '+ filter.value }})</span>
+                     <button class="btn" @click.prevent="removeFilter(filter)">Remove</button>
+                     <button class="btn" @click.prevent="editFilter(filter)">Edit</button>
+                   </li>
+                 </draggable>
+               </ul>
+             </div>
+             <div class="input-block" v-if="fields">
+               <table class="dataintable">
+                 <thead>
+                   <tr>
+                     <th width="25%">字段</th>
+                     <th width="30%">操作符</th>
+                     <th width="25%">值</th>
+                     <th>操作</th>
+                   </tr>
+                  </thead>
+                  <tbody>
+                   <tr>
+                     <td class="bsIE">
+                       <select class="form-select" v-model="new_filter_field" @change="updateFilterOp">
+                         <option v-for="(field, key) in fields" v-if="field.filter_type" :value="key">@{{ field.name }}</option>
+                       </select>
+                     </td>
+                     <td class="bsFirefox">
+                       <select class="form-select" v-model="new_filter_op">
+                         <option v-for="(op, key) in filter_ops" :value="key">@{{ op.title }}</option>
+                       </select>
+                     </td>
+                     <td class="bsChrome">
+                       <div v-if="new_filter_op != 'isNull' && new_filter_op != 'isNotNull'">
+                         <input type="text" name="new_filter_value" :placeholder="filter_value_placeholder" v-model="new_filter_value" class="form-text" v-if="select_field_filter_type != 'yes-no'">
+                         <div v-else>
+                           <input type="radio" name="new_filter_value" value="1" v-model="new_filter_value" checked="checked" class="form-radio">Yes
+                           <input type="radio" name="new_filter_value" value="0" v-model="new_filter_value" class="form-radio">No
+                         </div>
+                       </div>
+                     </td>
+                     <td class="bsChrome">
+                       <button class="btn btn-primary btn-mini" @click.prevent="addNewFilter(new_filter_exposed_setting)" v-if="!edit_filter_mode">添加</button>
+                       <button class="btn btn-primary btn-mini" @click.prevent="doneEditFilter(new_filter_exposed_setting)" v-if="edit_filter_mode">修改</button>
+                       <button class="btn btn-primary btn-mini" @click.prevent="cancelEditFilter" v-if="edit_filter_mode">取消</button>
+                     </td>
+                   </tr>
+                   <tr>
+                     <td class="bsIE" colspan="4">
+                       <label class="form-type-checkbox">
+                         <input class="a-checkbox" type="checkbox" v-model="new_filter_value_from_url">
+                         <span class="b-checkbox"></span>
+                         使用Url动态参数
+                       </label>
+                       <br />
+                       <label class="form-type-checkbox">
+                         <input class="a-checkbox" type="checkbox" v-model="new_filter_exposed_setting">
+                         <span class="b-checkbox"></span>
+                         暴露此字段
+                       </label>
+                       <div class="exposed_setting" v-if="new_filter_exposed_setting">
+                         <div class="form-item">
+                           <label class="form-label">标签</label>
+                           <div class="input-inline-block">
+                             <input class="form-text" type="text" name="filter_exposed_lable" v-model="new_filter_exposed_lable">
+                           </div>
+                         </div>
+                         <div class="form-item">
+                           <label class="form-label">描述</label>
+                           <div class="input-inline-block">
+                             <input class="form-text" type="text" name="filter_exposed_description" v-model="new_filter_exposed_description">
+                           </div>
+                         </div>
+                         <div class="form-item">
+                           <label class="form-label">标识符</label>
+                           <div class="input-inline-block">
+                             <input class="form-text" type="text" name="filter_exposed_identifier" v-model="new_filter_exposed_identifier">
+                           </div>
+                         </div>
+                       </div>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+
+           <div class="form-item" pane="" v-if="view_table != ''">
+             <label class="form-label">排序</label>
+             <div class="view_sort_list" v-if="view_sorts.length != 0">
+               <ul>
+                 <draggable v-model="view_sorts" :options="{group:'view_sort_list'}">
+                   <li v-for="(sort, key) in view_sorts" :class="{'even': key % 2 === 0, 'odd': key % 2 !== 0 }" :key="key">
+                     <span @click.prevent="editSort(sort)">@{{ sort.field }} (@{{ sort.exposed ? 'exposed' : sort.value }})</span>
+                     <button class="btn" @click.prevent="removeSort(sort)">Remove</button>
+                     <button class="btn" @click.prevent="editSort(sort)">Edit</button>
+                   </li>
+                 </draggable>
+               </ul>
+             </div>
+             <div class="input-block" v-if="fields">
+               <table class="dataintable">
+                 <thead>
+                   <tr>
+                     <th width="25%">字段</th>
+                     <th width="30%">排序</th>
+                     <th width="25%">选项</th>
+                     <th>操作</th>
+                   </tr>
+                  </thead>
+                  <tbody>
+                   <tr>
+                     <td class="bsIE">
+                       <select class="form-select" v-model="new_sort_field" @change="updateSortType">
+                         <option v-for="(field, key) in fields" :value="key">@{{ field.name }}</option>
+                       </select>
+                     </td>
+                     <td class="bsFirefox">
+                       <input type="radio" name="new_sort_value" value="asc" v-model="new_sort_value" checked="checked" class="form-radio">ASC
+                       <input type="radio" name="new_sort_value" value="desc" v-model="new_sort_value" class="form-radio">DESC
+                     </td>
+                     <td class="bsChrome">
+                       <div class="sortdate" v-if="select_field_sort_type == 'date'">
+                         <span><input type="radio" name="new_sort_date" value="second" v-model="new_sort_date" checked="checked" class="form-radio">Second</span>
+                         <span><input type="radio" name="new_sort_date" value="minute" v-model="new_sort_date" class="form-radio">Minute</span>
+                         <span><input type="radio" name="new_sort_date" value="hour" v-model="new_sort_date" class="form-radio">Hour</span>
+                         <span><input type="radio" name="new_sort_date" value="day" v-model="new_sort_date" class="form-radio">Day</span>
+                         <span><input type="radio" name="new_sort_date" value="month" v-model="new_sort_date" class="form-radio">Month</span>
+                         <span><input type="radio" name="new_sort_date" value="year" v-model="new_sort_date" class="form-radio">Year</span>
+                       </div>
+                     </td>
+                     <td class="bsChrome">
+                       <button class="btn btn-primary btn-mini" @click.prevent="addNewSort(new_sort_exposed_setting)" v-if="!edit_sort_mode">添加</button>
+                       <button class="btn btn-primary btn-mini" @click.prevent="doneEditSort(new_sort_exposed_setting)" v-if="edit_sort_mode">修改</button>
+                       <button class="btn btn-primary btn-mini" @click.prevent="cancelEditSort" v-if="edit_sort_mode">取消</button>
+                     </td>
+                   </tr>
+                   <tr>
+                     <td class="bsIE" colspan="4">
+                       <label class="form-type-checkbox">
+                         <input class="a-checkbox" type="checkbox" v-model="new_sort_exposed_setting">
+                         <span class="b-checkbox"></span>
+                         暴露此字段
+                       </label>
+                       <div class="exposed_setting" v-if="new_sort_exposed_setting">
+                         <div class="form-item">
+                           <label class="form-label">标签</label>
+                           <div class="input-inline-block">
+                             <input type="text" class="form-text" name="sort_exposed_lable" v-model="new_sort_exposed_lable">
+                           </div>
+                         </div>
+                       </div>
+                     </td>
+                   </tr>
+                 </tbody>
+               </table>
+             </div>
+           </div>
+         </div>
+
+
+         <div class="con">
+           <div class="form-item" pane="">
+             <label class="form-type-checkbox">
+               <input class="a-checkbox" type="checkbox" name="has_pager" title="使用分页" v-model="has_pager">
+               <span class="b-checkbox"></span>
+               使用分页
+             </label>
+           </div>
+
+           <div class="form-item" v-if="has_pager">
+             <label class="form-label">分页</label>
+             <div class="input-inline">
+               <select name="view_pager[type]" v-model="view_pager.type">
+                 <option value="">请选择分页</option>
+                 <option value="mini">迷你分页</option>
+                 <option value="full">完整分页</option>
+                 <option value="display_all">显示所有</option>
+                 <option value="display_number">显示部分</option>
+               </select>
+               <input class="form-text" type="text" name="view_pager[display]" v-if="view_pager.type != 'display_all'" v-model="view_pager.display">
+               <input class="form-text" type="text" name="view_pager[offset]" v-model="view_pager.offset">
+             </div>
+           </div>
+
+           <div class="form-item" pane="">
+             <label class="form-type-checkbox">
+               <input class="a-checkbox" type="checkbox" name="json_export" title="API输出" v-model="json_export">
+               <span class="b-checkbox"></span>
+               API输出
+             </label>
+             <div class="input-block">
+               <div><label class="form-label">路径</label></div>
+               <input type="text" class="form-text" name="view_path" v-model="view_path">
+             </div>
+           </div>
+
+           <div class="form-item" pane="">
+             <label class="form-type-checkbox">
+               <input class="a-checkbox" type="checkbox" name="need_permission" title="设置权限" v-model="need_permission" @change="scanPermission">
+               <span class="b-checkbox"></span>
+               设置权限
+             </label>
+             <div class="dropdown-permission-list" v-if="need_permission">
+               <select name="view_permission" multiple placeholder="请选择权限(可多选)"></select>
+             </div>
+           </div>
+         </div>
+
+
+         <div class="con">
+           <div v-if="!json_export">
+             <div class="form-item" pane="">
+               <div><label class="form-label">格式化</label></div>
+               <button class="btn btn-primary btn-mini" @click.prevent="setTextarea('htmllist')">Html List</button>
+               <button class="btn btn-primary btn-mini" @click.prevent="setTextarea('table')">Table</button>
+               <button class="btn btn-primary btn-mini" @click.prevent="setTextarea('none')">Unformatted list</button>
+               <button class="btn btn-primary btn-mini" @click.prevent="setTextarea('html5')">HTML5</button>
+             </div>
+
+             <div class="form-item" pane="">
+               <div><label class="form-label" v-if="view_fields != ''">可用字段</label></div>
+               <button class="btn btn-primary btn-mini" v-for="field in view_fields">@{{ field }}</button>
+             </div>
+
+             <div class="form-item" pane="">
+               <label class="form-label">模板</label>
+               <input type="radio" id="create_new_template" value="new" v-model="create_new_template">创建新模板
+               <input type="radio" id="create_new_template" value="exist" v-model="create_new_template">使用现成模板
+               <div class="form-item" v-if="create_new_template == 'exist'">
+                 <select name="view_table" v-model="view_template">
+                   <option value="">请选择模板</option>
+                   <option v-for="(template, index) in templates" :value="template">@{{ index }}</option>
+                 </select>
+                 <button class="btn btn-primary btn-mini" @click.prevent="cleanLoadTemplates">刷新模板缓存</button>
+                 <button class="btn btn-primary btn-mini" @click.prevent="editThisTemplate">编辑该模板</button>
+               </div>
+             </div>
+
+             <div class="form-item form-text" v-if="show_editor">
+               <div><label class="form-label">编辑模板</label></div>
+               <div class="input-block vx-stage-container">
+                 <textarea class="template-textarea" rows="20" cols="15" v-model="template_content"></textarea>
+                 <div class="vx-stage-north"></div>
+                 <div class="vx-stage-west"></div>
+               </div>
+               <div v-if="create_new_template == 'exist'">
+                 <label class="form-type-checkbox">
+                   <input class="a-checkbox" type="checkbox" name="overwrit_template" title="描述" v-model="overwrit_template">
+                   <span class="b-checkbox"></span>
+                   覆盖原模板文件
+                 </label>
+               </div>
+             </div>
+           </div>
+
+           <div class="form-item">
+             <div class="input-block">
+               <button class="btn" @click.prevent="saveView('final')">保存</button>
+               <button type="reset">重置</button>
+             </div>
+           </div>
+         </div>
+     </div>
+  </div>
+</form>
+  <div class="side-right">
+    <div class="context-filter">动态参数：<input type="text" v-model="context_filter_value"></div>
+    <button class="btn" @click.prevent="previewResult" :disabled="canPreview">预览</button>
+    <div class="preview-result">
+      <h2>Preview</h2>
+      <div class="views-live-preview">
+        <pre v-if="json_export" v-html="preview_result"></pre>
+        <div v-html="preview_result" v-else></div>
+        <div class="show-query-sql"></div>
+      </div>
+    </div>
+    <div class="preview-note">注：本预览只作为临时效果预览, 分页、样式等效果请在最终调用页面查看.</div>
+  </div>
+@endsection
+
+@section('footer-js')
+<link rel="stylesheet" href="/theme/seven/assets/css/views.css">
+<link rel="stylesheet" href="/theme/seven/assets/css/jquery.dropdown.css">
+<script src="/theme/seven/assets/js/jquery.min.js"></script>
+<script src="/theme/seven/assets/js/layer/layer.js"></script>
+<script src="/theme/seven/assets/js/vue.js"></script>
+<script src="/theme/seven/assets/js/vue-resource.js"></script>
+<script src="/theme/seven/assets/js/lodash.min.js"></script>
+<script src="/theme/seven/assets/js/jquery.dropdown.js"></script>
+<script src="/theme/seven/assets/js/sortable.min.js"></script>
+<script src="/theme/seven/assets/js/vuedraggable.umd.min.js"></script>
+@if(isset($phptojs))
+{!! $phptojs->getJsVars() !!}
+@endif
+<script src="/theme/seven/assets/js/app.js"></script>
+@endsection

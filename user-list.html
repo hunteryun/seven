@@ -1,0 +1,70 @@
+@extends('seven.layout')
+
+@section('main-content')
+<ul class="action-links">
+  <li>
+    <a href="/admin/user/add" class="button button-action button--primary button--small">添加用户</a>
+  </li>
+</ul>
+<table>
+    <thead>
+        <tr>
+          <th>ID</th>
+          <th>头像</th>
+          <th>用户名</th>
+          <th>昵称</th>
+          <th>邮箱</th>
+          <th>会员等级</th>
+          <th>状态</th>
+          <th>上次登录</th>
+          <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+      @foreach($users as $r)
+          <tr>
+            <td>
+                {{ $r->uid }}
+            </td>
+            <td>
+              <img src="{{ $r->image }}" width="70">
+            </td>
+            <td>
+              {{ $r->username }}
+            </td>
+            <td>
+              {{ $r->nickname }}
+            </td>
+            <td>
+              {{ $r->email }}
+            </td>
+            <td>
+              @if(empty($r->role))
+              普通会员
+              @else
+              @foreach($r->role as $ro)
+              {{ $ro->name }} <br />
+              @endforeach
+              @endif
+            </td>
+            <td>
+              {!! $r->status == 1 ? '<span class="green">正常</span>' : '<span class="red">锁定</span>' !!}
+            </td>
+            <td>
+              {{ date('Y-m-d H:i:s', $r->accessed) }}
+            </td>
+            <td class="op">
+              <div class="dropbutton-wrapper dropbutton-single">
+               <div class="dropbutton-widget">
+                <ul class="dropbutton">
+                 <li class="edit dropbutton-action"><a href="/admin/user/edit/{{ $r->uid }}">编辑</a></li>
+                 <li class="delete dropbutton-action"><a href="/admin/user/del/{{ $r->uid }}">删除</a></li>
+                </ul>
+               </div>
+              </div>
+            </td>
+        </tr>
+      @endforeach
+    </tbody>
+</table>
+@endsection

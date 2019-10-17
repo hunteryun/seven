@@ -1,0 +1,18 @@
+@extends('seven.layout')
+
+@section('main-content')
+<div class="layui-tab layui-tab-brief">
+  <ul class="layui-tab-title">
+    @foreach($allforms as $key => $fm)
+    <li class="{{ $key == 0 ? 'layui-this' : '' }}">{{ $fm['name'] }}</li>
+    @endforeach
+  </ul>
+  <div class="layui-tab-content">
+    @foreach($allforms as $key => $fm)
+    <div class="layui-tab-item {{ $key == 0 ? 'layui-show' : '' }}">
+      {!! hunter_form_render('layui', $fm['fields']) !!}
+    </div>
+    @endforeach
+  </div>
+</div>
+@endsection

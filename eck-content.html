@@ -1,0 +1,81 @@
+@extends('seven.layout')
+
+@section('main-content')
+<ul class="action-links">
+  <li>
+    <a href="/admin/eck/{{ $machine_name }}/content/add" class="button button-action button--primary button--small">添加{{ get_eck_name_bymachine_name($machine_name) }}</a>
+  </li>
+</ul>
+<table>
+    <thead>
+        <tr>
+          <th>ID</th>
+          @if(!empty($fields))
+          @foreach($fields as $f)
+          @if($f->field_type != 'textarea')
+          <th>{{ $f->label }}</th>
+          @endif
+          @endforeach
+          @endif
+          <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+      @if(!empty($contents))
+      @foreach($contents as $r)
+          <tr role="row">
+            <td>
+                {{ $r->{substr($machine_name, 0, 1 ).'id'} }}
+            </td>
+            @if(!empty($fields))
+            @foreach($fields as $f)
+            @if($f->field_type != 'textarea' && $f->field_type != 'system')
+            @if($f->field_type == 'image')
+            @if($f->field_value_type == 'multi')
+            <td>
+              @if(!empty(json_decode($r->{$f->field_machine_name})) && json_decode($r->{$f->field_machine_name}) != '[]')
+              @foreach(json_decode($r->{$f->field_machine_name}) as $key => $sigle_img)
+              @if($key < 3)
+                <img src="{{ $sigle_img->image }}" width="70">
+              @endif
+              @endforeach
+              @endif
+            </td>
+            @else
+            <td>
+                <img src="{{ $r->{$f->field_machine_name} }}" width="70">
+            </td>
+            @endif
+            @else
+            <td>
+                {{ $r->{$f->field_machine_name} }}
+            </td>
+            @endif
+            @elseif($f->field_type == 'system' && $f->field_machine_name == 'uid')
+            <td>
+                {{ get_username_byid($r->uid) }}
+            </td>
+            @elseif($f->field_type == 'system' && ($f->field_machine_name == 'created' || $f->field_machine_name == 'updated'))
+            <td>
+                {{ date("Y-m-d H:i:s", $r->{$f->field_machine_name}) }}
+            </td>
+            @else
+            @endif
+            @endforeach
+            @endif
+            <td class="op">
+              <div class="dropbutton-wrapper dropbutton-single">
+               <div class="dropbutton-widget">
+                <ul class="dropbutton">
+                 <li class="edit dropbutton-action"><a href="/admin/eck/news/content/edit/{{ $r->{substr($machine_name, 0, 1 ).'id'} }}">编辑</a></li>
+                 <li class="delete dropbutton-action"><a href="/admin/eck/news/content/del/{{ $r->{substr($machine_name, 0, 1 ).'id'} }}">删除</a></li>
+                </ul>
+               </div>
+              </div>
+            </td>
+        </tr>
+      @endforeach
+      @endif
+    </tbody>
+</table>
+@endsection
