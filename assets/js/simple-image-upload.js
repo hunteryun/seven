@@ -16,13 +16,13 @@ $(function(){
       var varDom = '';
       var res = $.parseJSON(response);
       vartDom = '<div class="item"><img src="'+ res.data.full_path_new_name +'" class="upload-img"></div>'
-      $('#imagePreview').html(vartDom);
+      $(this).parents().parents().parents().find('#imagePreview').html(vartDom);
       $(this).parents().parents().find("#single-img").val(res.data.full_path_new_name);
     }else {
       var varDom = '';
       var res = $.parseJSON(response);
       vartDom = '<div class="item"><img src="'+ res.data.full_path_new_name +'" class="upload-img"><input type="hidden" name="up_photos[][img]" value="'+res.data.full_path_new_name+'"><div class="del-pimg" onClick="delSimpleImg(this)"></div></div>'
-      $('#imagePreview').append(vartDom);
+      $(this).parents().parents().parents().find('#imagePreview').append(vartDom);
     }
   });
 
