@@ -81,7 +81,9 @@ table{border-collapse:collapse;border-spacing:0;}
   padding: 0;
   display: block;
   list-style: none;
-  margin: 30px 0 0 0;
+}
+#extra_setting .form-item {
+  margin: 10px 0;
 }
 .view-config #view_table {
   display: inline-block;
@@ -91,6 +93,8 @@ table{border-collapse:collapse;border-spacing:0;}
   margin:0 0 3px 0;
   padding:0px;
   display:block;
+}
+.view-config label.form-label {
   font-weight: bold;
 }
 .view-config label.form-type-checkbox {
@@ -204,12 +208,17 @@ table{border-collapse:collapse;border-spacing:0;}
   padding: 9px 15px;
   font-size: 14px;
   border: 1px solid #e2e2e2;
-}
-.dataintable .sortdate span {
-  display: inline-block;
   vertical-align: middle;
-  width: 45%;
-  line-height: 20px;
+}
+.dataintable label.form-type-radio {
+  vertical-align: middle;
+  line-height: 26px;
+  font-weight: normal;
+  margin: 0;
+}
+.order_type label.form-type-radio, .filter-value label.form-type-radio {
+  display: inline-block;
+  margin-right: 10px;
 }
 .view_filters_list,
 .view_sort_list,

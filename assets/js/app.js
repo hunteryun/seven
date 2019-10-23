@@ -6,7 +6,7 @@ Vue.http.options.emulateJSON = true;
 var App = new Vue({
   el: '#App',
   data: {
-    view_name: '',
+    view_name: 'default',
     view_machine_name: 'default',
     view_title: '',
     view_description: '',
@@ -15,7 +15,6 @@ var App = new Vue({
     view_filters: [],
     view_sorts: [],
     view_relations: [],
-    view_template: '',
     view_pager: {
       type: 'display_all',
       display: 10,
@@ -31,8 +30,6 @@ var App = new Vue({
     template_content: '',
     fields: {},
     preview_result: '',
-    create_new_template: 'new',
-    overwrit_template: true,
     show_editor: true,
     temp_template: '',
     relationships: [],
@@ -56,6 +53,7 @@ var App = new Vue({
     new_view_relation_table: '',
     new_view_relation_table_field: '',
     select_field_filter_type: '',
+    select_field_filter_value: [],
     select_field_sort_type: '',
     editedFilter: null,
     editedSort: null,
@@ -69,7 +67,8 @@ var App = new Vue({
     need_permission: false,
     permissions: [],
     context_filter_value: '',
-    black_relation_tables: []
+    black_relation_tables: [],
+    filter_value_options: []
   },
   mounted: function () {
     this.initViewsSetting();
@@ -119,13 +118,12 @@ var App = new Vue({
       vm.has_pager = edit_view.has_pager === 'false' ? false : true;
       vm.has_exposed_sort = edit_view.has_exposed_sort === 'false' ? false : true;
       vm.view_pager = edit_view.view_pager;
-      vm.view_template = edit_view.view_template;
       vm.template_content = edit_view.template_content;
-      vm.overwrit_template = edit_view.overwrit_template === 'false' ? false : true;
       vm.json_export = edit_view.json_export === 'false' ? false : true;
       vm.view_path = edit_view.view_path;
-      if(edit_view.view_relation_table){
-        vm.view_relation_table = edit_view.view_relation_table;
+      if(edit_view.view_relations){
+        vm.view_relations = edit_view.view_relations;
+        vm.add_relationships = true;
       }
       if(edit_view.view_filters){
         vm.view_filters = edit_view.view_filters;
@@ -155,8 +153,13 @@ var App = new Vue({
             vm.tables = response.body;
             if(typeof(edit_view) !== 'undefined'){
               vm.updateField();
-              if(edit_view.view_relation_table){
-                vm.addRelationshipFields();
+              if(edit_view.view_relations){
+                for(let i = 0, len = edit_view.view_relations.length; i < len; i++) {
+                  vm.new_view_table_field = edit_view.view_relations[i].view_table_field;
+                  vm.new_view_relation_table = edit_view.view_relations[i].view_relation_table;
+                  vm.new_view_relation_table_field = edit_view.view_relations[i].view_relation_table_field;
+                  vm.addRelationshipFields();
+                }
               }
             }
           }
@@ -309,7 +312,7 @@ var App = new Vue({
           return;
         }
       }else {
-        vm.has_exposed_sort = treu;
+        vm.has_exposed_sort = true;
       }
 
       vm.view_sorts.push({
@@ -372,9 +375,6 @@ var App = new Vue({
       //添加已选表在关联黑名单, 因为不能自己关联自己
       vm.black_relation_tables.push(vm.new_view_relation_table);
       vm.addRelationshipFields();
-      vm.new_view_table_field = '';
-      vm.new_view_relation_table = '';
-      vm.new_view_relation_table_field = '';
     },
     editRelation: function (relation) {
       var vm = this;
@@ -401,20 +401,8 @@ var App = new Vue({
     removeRelation: function (relation) {
       var vm = this;
       vm.view_relations.splice(vm.view_relations.indexOf(relation), 1);
+      vm.removeRelationshipFields(relation);
     },
-    cleanLoadTemplates: function() {
-      var vm = this;
-      vm.$http.post('/admin/api/templates', {'rescan': true}).then(function (response) {
-        if (response.body.length == 0) {
-          layer.alert('init error！', {icon: 5});
-        } else {
-          vm.templates = response.body;
-          layer.msg('Clean Success!', {time: 1000, icon: 6});
-        }
-      }, function (response) {
-        layer.alert('init error！', {icon: 5});
-      });
-  	},
     previewResult: function() {
       var vm = this;
       vm.saveView('temp');
@@ -452,9 +440,7 @@ var App = new Vue({
         'has_pager': vm.has_pager,
         'has_exposed_sort': vm.has_exposed_sort,
         'view_pager': vm.view_pager,
-        'view_template': vm.view_template,
         'template_content': vm.template_content,
-        'overwrit_template': vm.overwrit_template,
         'type': type,
         'json_export': vm.json_export,
         'view_path': vm.view_path,
@@ -464,7 +450,7 @@ var App = new Vue({
             layer.alert('init error！', {icon: 5});
           } else {
             if(response.body == true) {
-              layer.msg('Save Success!', {time: 1000, icon: 6});
+              window.location.href = "/admin/views";
             }else {
               vm.temp_template = response.body;
               vm.getPreviewResult();
@@ -481,17 +467,6 @@ var App = new Vue({
         vm.fields[vm.view_table+'.'+n] = vm.tables[vm.view_table].fields[n];
       }
 
-      if(vm.tables[vm.view_table].relationship){
-        vm.relationships = [];
-        for(var i in vm.tables[vm.view_table].relationship){
-          if (vm.tables[vm.view_table].relationship.hasOwnProperty(i)) {
-            vm.relationships.push(i);
-          }
-        }
-      }else {
-        vm.relationships = [];
-      }
-
       //添加已选表在关联黑名单, 因为不能自己关联自己
       vm.black_relation_tables.push(vm.view_table);
     },
@@ -503,6 +478,22 @@ var App = new Vue({
       vm.filter_ops = vm.filters_list[vm.select_field_filter_type];
       vm.new_filter_exposed_lable = vm.fields[vm.new_filter_field].name;
       vm.new_filter_exposed_identifier = vm.new_filter_field.replace(".","_");
+      if(vm.select_field_filter_type == 'select') {
+        vm.filter_value_options = vm.tables[select_table].fields[select_filed].filter_value_options;
+      }
+    },
+    updateFilterSelectValue: function() {
+      var vm = this;
+      if(vm.select_field_filter_value.indexOf('all') < 0) {
+        vm.new_filter_value = vm.select_field_filter_value.join("|");
+      }else {
+        var arr = []
+        for (let i in vm.filter_value_options) {
+            arr.push(vm.filter_value_options[i]);
+        }
+        vm.new_filter_value = arr.join("|");
+      }
+
     },
     updateSortType: function() {
       var vm = this;
@@ -520,19 +511,19 @@ var App = new Vue({
       for(var n in vm.tables[vm.new_view_relation_table].fields){
         vm.fields[vm.new_view_relation_table+'.'+n] = vm.tables[vm.new_view_relation_table].fields[n];
       }
+      vm.new_view_table_field = '';
+      vm.new_view_relation_table = '';
+      vm.new_view_relation_table_field = '';
   	},
-    editThisTemplate: function() {
+    removeRelationshipFields: function(relation) {
       var vm = this;
-      vm.$http.post('/admin/api/get-template-content', {'file_name': vm.view_template}).then(function (response) {
-          if (response.body.length == 0) {
-            layer.alert('init error！', {icon: 5});
-          } else {
-            vm.template_content = response.body;
-          }
-      }, function (response) {
-          layer.alert('init error！', {icon: 5});
-      });
-  	},
+      for(var n in vm.tables[relation.view_relation_table].fields){
+        delete vm.fields[relation.view_relation_table+'.'+n];
+        if(vm.view_fields.indexOf(relation.view_relation_table+'.'+n) > 0) {
+          vm.view_fields.splice(vm.view_fields.indexOf(relation.view_relation_table+'.'+n), 1);
+        }
+      }
+    },
     scanPermission: function() {
       var vm = this;
       if(vm.need_permission){

@@ -23,7 +23,7 @@ $(function(){
     }
   });
 
-  $(".con").eq(0).show();
+  $(".con").eq(1).show();
   $(".tab-title span").click(function(){
       var num =$(".tab-title span").index(this);
       $(".con").hide();

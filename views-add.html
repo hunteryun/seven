@@ -5,8 +5,8 @@
   <div class="views-tabs">
     <div class="tab-title">
     	 <!-- Tab标题 -->
-       <span class="active spanList">基础设置</span>
-       <span class="spanList">查询设置</span>
+       <span class="spanList">基础设置</span>
+       <span class="active spanList">查询设置</span>
        <span class="spanList">高级设置</span>
        <span class="spanList">模板</span>
     </div>
@@ -79,13 +79,13 @@
                   </thead>
                   <tbody>
                    <tr>
-                     <td class="bsIE">
-                       <select name="view_table_field" v-model="new_view_table_field">
+                     <td>
+                       <select name="view_table_field" v-model="new_view_table_field" v-if="tables[view_table] !== undefined">
                          <option value="">请选择表</option>
-                         <option  v-for="(field, key) in tables[view_table].fields" :value="key">@{{ field.name }}</option>
+                         <option v-for="(field, key) in tables[view_table].fields" :value="key">@{{ field.name }}</option>
                        </select>
                      </td>
-                     <td class="bsIE">
+                     <td>
                        <select name="view_relation_table" v-model="new_view_relation_table" v-if="new_view_table_field != ''">
                          <option value="">请选择表</option>
                          <option v-for="(table, index) in tables" :value="index" v-if="black_relation_tables.indexOf(index) < 0">@{{ index }}</option>
@@ -95,7 +95,7 @@
                          <option v-for="(field, key) in tables[new_view_relation_table].fields" :value="key">@{{ field.name }}</option>
                        </select>
                      </td>
-                     <td class="bsChrome">
+                     <td>
                        <button class="btn btn-primary btn-mini" @click.prevent="addNewRelation" v-if="!edit_relation_mode">添加</button>
                        <button class="btn btn-primary btn-mini" @click.prevent="doneEditRelation" v-if="edit_relation_mode">修改</button>
                        <button class="btn btn-primary btn-mini" @click.prevent="cancelEditRelation" v-if="edit_relation_mode">取消</button>
@@ -116,7 +116,7 @@
                   </thead>
                   <tbody>
                    <tr>
-                     <td class="bsIE">
+                     <td>
                        <ul>
                          <li v-for="(field, key) in fields">
                            <label class="form-type-checkbox">
@@ -158,33 +158,41 @@
                   </thead>
                   <tbody>
                    <tr>
-                     <td class="bsIE">
+                     <td>
                        <select class="form-select" v-model="new_filter_field" @change="updateFilterOp">
                          <option v-for="(field, key) in fields" v-if="field.filter_type" :value="key">@{{ field.name }}</option>
                        </select>
                      </td>
-                     <td class="bsFirefox">
+                     <td>
                        <select class="form-select" v-model="new_filter_op">
                          <option v-for="(op, key) in filter_ops" :value="key">@{{ op.title }}</option>
                        </select>
                      </td>
-                     <td class="bsChrome">
+                     <td>
                        <div v-if="new_filter_op != 'isNull' && new_filter_op != 'isNotNull'">
-                         <input type="text" name="new_filter_value" :placeholder="filter_value_placeholder" v-model="new_filter_value" class="form-text" v-if="select_field_filter_type != 'yes-no'">
+                         <div class="filter-value" v-if="select_field_filter_type == 'yes-no'">
+                           <label class="form-type-radio"><input type="radio" name="new_filter_value" value="1" v-model="new_filter_value" checked="checked" class="a-radio"><span class="b-radio"></span>Yes</label>
+                           <label class="form-type-radio"><input type="radio" name="new_filter_value" value="0" v-model="new_filter_value" class="a-radio"><span class="b-radio"></span>No</label>
+                         </div>
+                         <div v-else-if="select_field_filter_type == 'select'">
+                           <select class="form-select" multiple v-model="select_field_filter_value" @change="updateFilterSelectValue">
+                             <option value="all">Select All</option>
+                             <option v-for="(opt, key) in filter_value_options" :value="key">@{{ opt }}</option>
+                           </select>
+                         </div>
                          <div v-else>
-                           <input type="radio" name="new_filter_value" value="1" v-model="new_filter_value" checked="checked" class="form-radio">Yes
-                           <input type="radio" name="new_filter_value" value="0" v-model="new_filter_value" class="form-radio">No
+                           <input type="text" name="new_filter_value" :placeholder="filter_value_placeholder" v-model="new_filter_value" class="form-text">
                          </div>
                        </div>
                      </td>
-                     <td class="bsChrome">
+                     <td>
                        <button class="btn btn-primary btn-mini" @click.prevent="addNewFilter(new_filter_exposed_setting)" v-if="!edit_filter_mode">添加</button>
                        <button class="btn btn-primary btn-mini" @click.prevent="doneEditFilter(new_filter_exposed_setting)" v-if="edit_filter_mode">修改</button>
                        <button class="btn btn-primary btn-mini" @click.prevent="cancelEditFilter" v-if="edit_filter_mode">取消</button>
                      </td>
                    </tr>
                    <tr>
-                     <td class="bsIE" colspan="4">
+                     <td colspan="4">
                        <label class="form-type-checkbox">
                          <input class="a-checkbox" type="checkbox" v-model="new_filter_value_from_url">
                          <span class="b-checkbox"></span>
@@ -248,33 +256,33 @@
                   </thead>
                   <tbody>
                    <tr>
-                     <td class="bsIE">
+                     <td>
                        <select class="form-select" v-model="new_sort_field" @change="updateSortType">
                          <option v-for="(field, key) in fields" :value="key">@{{ field.name }}</option>
                        </select>
                      </td>
-                     <td class="bsFirefox">
-                       <input type="radio" name="new_sort_value" value="asc" v-model="new_sort_value" checked="checked" class="form-radio">ASC
-                       <input type="radio" name="new_sort_value" value="desc" v-model="new_sort_value" class="form-radio">DESC
+                     <td class="order_type">
+                       <label class="form-type-radio"><input type="radio" name="new_sort_value" value="asc" v-model="new_sort_value" checked="checked" class="a-radio"><span class="b-radio"></span>ASC</label>
+                       <label class="form-type-radio"><input type="radio" name="new_sort_value" value="desc" v-model="new_sort_value" class="a-radio"><span class="b-radio"></span>DESC</label>
                      </td>
-                     <td class="bsChrome">
+                     <td>
                        <div class="sortdate" v-if="select_field_sort_type == 'date'">
-                         <span><input type="radio" name="new_sort_date" value="second" v-model="new_sort_date" checked="checked" class="form-radio">Second</span>
-                         <span><input type="radio" name="new_sort_date" value="minute" v-model="new_sort_date" class="form-radio">Minute</span>
-                         <span><input type="radio" name="new_sort_date" value="hour" v-model="new_sort_date" class="form-radio">Hour</span>
-                         <span><input type="radio" name="new_sort_date" value="day" v-model="new_sort_date" class="form-radio">Day</span>
-                         <span><input type="radio" name="new_sort_date" value="month" v-model="new_sort_date" class="form-radio">Month</span>
-                         <span><input type="radio" name="new_sort_date" value="year" v-model="new_sort_date" class="form-radio">Year</span>
+                         <label class="form-type-radio"><input type="radio" name="new_sort_date" value="second" v-model="new_sort_date" checked="checked" class="a-radio"><span class="b-radio"></span>Second</label>
+                         <label class="form-type-radio"><input type="radio" name="new_sort_date" value="minute" v-model="new_sort_date" class="a-radio"><span class="b-radio"></span>Minute</label>
+                         <label class="form-type-radio"><input type="radio" name="new_sort_date" value="hour" v-model="new_sort_date" class="a-radio"><span class="b-radio"></span>Hour</label>
+                         <label class="form-type-radio"><input type="radio" name="new_sort_date" value="day" v-model="new_sort_date" class="a-radio"><span class="b-radio"></span>Day</label>
+                         <label class="form-type-radio"><input type="radio" name="new_sort_date" value="month" v-model="new_sort_date" class="a-radio"><span class="b-radio"></span>Month</label>
+                         <label class="form-type-radio"><input type="radio" name="new_sort_date" value="year" v-model="new_sort_date" class="a-radio"><span class="b-radio"></span>Year</label>
                        </div>
                      </td>
-                     <td class="bsChrome">
+                     <td>
                        <button class="btn btn-primary btn-mini" @click.prevent="addNewSort(new_sort_exposed_setting)" v-if="!edit_sort_mode">添加</button>
                        <button class="btn btn-primary btn-mini" @click.prevent="doneEditSort(new_sort_exposed_setting)" v-if="edit_sort_mode">修改</button>
                        <button class="btn btn-primary btn-mini" @click.prevent="cancelEditSort" v-if="edit_sort_mode">取消</button>
                      </td>
                    </tr>
                    <tr>
-                     <td class="bsIE" colspan="4">
+                     <td colspan="4">
                        <label class="form-type-checkbox">
                          <input class="a-checkbox" type="checkbox" v-model="new_sort_exposed_setting">
                          <span class="b-checkbox"></span>
@@ -297,7 +305,7 @@
          </div>
 
 
-         <div class="con">
+         <div class="con" id="extra_setting">
            <div class="form-item" pane="">
              <label class="form-type-checkbox">
                <input class="a-checkbox" type="checkbox" name="has_pager" title="使用分页" v-model="has_pager">
@@ -361,33 +369,12 @@
                <button class="btn btn-primary btn-mini" v-for="field in view_fields">@{{ field }}</button>
              </div>
 
-             <div class="form-item" pane="">
-               <label class="form-label">模板</label>
-               <input type="radio" id="create_new_template" value="new" v-model="create_new_template">创建新模板
-               <input type="radio" id="create_new_template" value="exist" v-model="create_new_template">使用现成模板
-               <div class="form-item" v-if="create_new_template == 'exist'">
-                 <select name="view_table" v-model="view_template">
-                   <option value="">请选择模板</option>
-                   <option v-for="(template, index) in templates" :value="template">@{{ index }}</option>
-                 </select>
-                 <button class="btn btn-primary btn-mini" @click.prevent="cleanLoadTemplates">刷新模板缓存</button>
-                 <button class="btn btn-primary btn-mini" @click.prevent="editThisTemplate">编辑该模板</button>
-               </div>
-             </div>
-
              <div class="form-item form-text" v-if="show_editor">
                <div><label class="form-label">编辑模板</label></div>
                <div class="input-block vx-stage-container">
                  <textarea class="template-textarea" rows="20" cols="15" v-model="template_content"></textarea>
                  <div class="vx-stage-north"></div>
                  <div class="vx-stage-west"></div>
-               </div>
-               <div v-if="create_new_template == 'exist'">
-                 <label class="form-type-checkbox">
-                   <input class="a-checkbox" type="checkbox" name="overwrit_template" title="描述" v-model="overwrit_template">
-                   <span class="b-checkbox"></span>
-                   覆盖原模板文件
-                 </label>
                </div>
              </div>
            </div>
@@ -403,7 +390,7 @@
   </div>
 </form>
   <div class="side-right">
-    <div class="context-filter">动态参数：<input type="text" v-model="context_filter_value"></div>
+    <div class="context-filter">动态参数：<input type="text" class="form-text" v-model="context_filter_value"></div>
     <button class="btn" @click.prevent="previewResult" :disabled="canPreview">预览</button>
     <div class="preview-result">
       <h2>Preview</h2>

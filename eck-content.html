@@ -12,7 +12,7 @@
           <th>ID</th>
           @if(!empty($fields))
           @foreach($fields as $f)
-          @if($f->field_type != 'textarea')
+          @if($f->field_type != 'textarea' && $f->field_type != 'textarea_with_editor')
           <th>{{ $f->label }}</th>
           @endif
           @endforeach
@@ -29,7 +29,7 @@
             </td>
             @if(!empty($fields))
             @foreach($fields as $f)
-            @if($f->field_type != 'textarea' && $f->field_type != 'system')
+            @if($f->field_type != 'textarea' && $f->field_type != 'textarea_with_editor' && $f->field_type != 'system')
             @if($f->field_type == 'image')
             @if($f->field_value_type == 'multi')
             <td>

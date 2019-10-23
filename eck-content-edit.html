@@ -1,0 +1,9 @@
+@extends('seven.layout')
+
+@section('main-content')
+ {!! hunter_form_render('seven', $form, $machine_name, $content) !!}
+@endsection
+
+@section('footer-js')
+{!! $page_bottom !!}
+@endsection
